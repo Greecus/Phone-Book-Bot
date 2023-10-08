@@ -25,20 +25,20 @@ class Record:
             for phone in phone_nums:
                 self.phones.append(phone)
         
-    def add(self,phone_number):
+    def add(self,phone_number)->None:
         for phone in self.phones:
             if phone.number==phone_number:
                 raise NumberExistanceError('This contact already had this number')
         self.phones.append(Phone(phone_number))
     
-    def remove(self,phone_number):
+    def remove(self,phone_number)->None:
         for phone in self.phones:
             if phone_number==phone.number:
                 self.phones.remove(phone)
                 return 
         raise NumberExistanceError("This contact doesn't have this number")
         
-    def change(self,previous_number,new_number):
+    def change(self,previous_number,new_number)->None:
         try:
             index=[phone.number for phone in self.phones].index(previous_number)
         except ValueError:
@@ -87,9 +87,5 @@ class AddressBook(UserDict):
     @_does_contact_exist
     def remove_number(self,name:str,number:str)->None:
         self.records[name].remove(number)
-
-class Field:
-    pass    
-
 
 
