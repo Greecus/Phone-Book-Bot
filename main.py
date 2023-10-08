@@ -27,12 +27,10 @@ def main()->None:
         command=command.split()
         if command[0]=='change':
             change_contact(*command[1:])
-            print("Phone number changed")
         elif command[0]=='add':
             add_contact_and_phone(*command[1:])
-            print('Contact added')
         elif command[0] == 'phone':
-            print(phone(*command[1:]))
+            phone(*command[1:])
         elif command[0] == 'remove':
             remove(*command[1:])
         else:
@@ -41,14 +39,13 @@ def main()->None:
 def input_error(func):
     def inner(*args):
         try:
-            output=func(*args)
+            func(*args)
         except ContactExistanceError as e:
             print(e)
         except NumberExistanceError as e:
             print(e)
         except MissingArgumentError as e:
             print(e)
-        return output
     return inner
 
 @input_error
@@ -56,17 +53,19 @@ def add_contact_and_phone(name:str=None, phone:str=None)->None:
     if not name or not phone:   raise MissingArgumentError('Missing phone number or name')
     adress_book.add_contact(name)
     adress_book.add_phone_num(name, phone)
+    print('Contact added')
 
 @input_error
 def change_contact(name:str=None,previous_phone_num:str=None,new_phone_num:str=None)->None:
     if not name or not previous_phone_num or not new_phone_num:   raise MissingArgumentError('Missing arguments')
     adress_book.change_phone_num(name,previous_phone_num,new_phone_num)
+    print("Phone number changed")
 
 @input_error
-def phone(name:str=None)->str:
+def phone(name:str=None)->None:
     if not name: raise MissingArgumentError('Missing name')
     phone_number=adress_book.see_contacts_phone_numbers(name)
-    return '\n'.join(f'{phone}' for phone in [f'  {name}']+phone_number)
+    print('\n'.join(f'{phone}' for phone in [f'  {name}']+phone_number))
 
 @input_error
 def remove(name:str=None, phone_number:str=None)->None:
