@@ -9,6 +9,9 @@ class NumberExistanceError(ValueError):
 class MissingArgumentError(TypeError):
     pass
 
+class WrongInputError(ValueError):
+    pass
+
 class Name:
     def __init__(self,name:str):
         self.value=name
@@ -17,9 +20,14 @@ class Phone:
     def __init__(self,phone_number:str):
         self.number=phone_number
 
+class Birthday:
+    def __init__(self,birthday_date:str):
+        self.birthday_date=birthday_date
+
 class Record:
-    def __init__(self,name:Name,*phone_nums:Phone):
+    def __init__(self,name:Name,*phone_nums:Phone,birthday:Birthday=None):
         self.name=name
+        self.birthday=None
         self.phones=[]
         if len(phone_nums): 
             for phone in phone_nums:
@@ -47,7 +55,10 @@ class Record:
             if phone.number==new_number:
                 raise NumberExistanceError('Phone number to which you are trying to change is already on this contacts list')
         self.phones[index]=Phone(new_number)
+    
         
+
+
 class AddressBook(UserDict):
     def __init__(self,*records:Record):
         self.records:dict[str,Record]={}
@@ -87,5 +98,14 @@ class AddressBook(UserDict):
     @_does_contact_exist
     def remove_number(self,name:str,number:str)->None:
         self.records[name].remove(number)
+
+    def iterator(self,n:int)->list:
+        contacts=list(self.records.keys())
+        print(contacts)
+        number_of_pages = int(len(contacts)/n) if len(contacts)/n==int(len(contacts)/n) else int(len(contacts)/n)+1
+        for i in range(number_of_pages):
+            yield contacts[i*n:(i+1)*n]
+
+        
 
 
